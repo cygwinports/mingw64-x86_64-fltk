@@ -1,0 +1,44 @@
+--- origsrc/fltk-1.3.2/configure.in	2012-11-06 15:13:54.000000000 -0600
++++ src/fltk-1.3.2/configure.in	2013-05-22 22:01:04.736209900 -0500
+@@ -73,12 +73,16 @@ AC_SUBST(OPTIM)
+ dnl in case of cross-compiling mingw32 under linux we must change uname for Win32 GUI
+ dnl run ./configure --host=i686-pc-ming32 try use X11 without change uname
+ if test "x$cross_compiling" != xno ; then
++  AC_PATH_PROG(FLUID_BUILD, fluid)
+   case $host_alias in
+     *mingw*)
+     uname=MINGW
+     ;;
+   esac
++else
++  FLUID_BUILD="../fluid/fluid\$(EXEEXT)"
+ fi
++AC_SUBST(FLUID_BUILD)
+ 
+ dnl OS-specific pre-tests...
+ dnl uname_GUI equals $uname unless we target Cygwin in combination with X11.
+--- origsrc/fltk-1.3.2/makeinclude.in	2012-12-05 08:53:03.000000000 -0600
++++ src/fltk-1.3.2/makeinclude.in	2013-05-22 21:59:32.408929100 -0500
+@@ -106,6 +106,8 @@ THREADS		= @THREADS@
+ 
+ # Name of FLUID executable we install
+ FLUID		= @FLUID@$(EXEEXT)
++# Name of FLUID executable we use to build tests
++FLUID_BUILD	= @FLUID_BUILD@
+ 
+ # Possible steps for OS X build only
+ OSX_ONLY	= @OSX_ONLY@
+--- origsrc/fltk-1.3.2/test/Makefile	2012-12-05 08:53:03.000000000 -0600
++++ src/fltk-1.3.2/test/Makefile	2013-05-22 22:02:43.119837100 -0500
+@@ -264,9 +264,9 @@ uninstall-osx:
+ 	$(RMDIR) $(DESTDIR)/Applications/sudoku.app
+ 
+ # FLUID file rules
+-.fl.cxx .fl.h:	../fluid/fluid$(EXEEXT)
++.fl.cxx .fl.h: $(FLUID_BUILD)
+ 	echo Generating $@ and header from $<...
+-	../fluid/fluid$(EXEEXT) -c $<
++	$(FLUID_BUILD) -c $<
+ 
+ # All demos depend on the FLTK library...
+ $(ALL): $(LIBNAME)
