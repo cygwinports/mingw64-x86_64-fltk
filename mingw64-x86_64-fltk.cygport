@@ -3,7 +3,7 @@ inherit cross
 
 NAME="mingw64-x86_64-fltk"
 VERSION=1.3.2
-RELEASE=2
+RELEASE=3
 CATEGORY="Devel"
 SUMMARY="Fast Light Toolkit for Win64 toolchain"
 DESCRIPTION="FLTK (pronounced 'fulltick') is a cross-platform C++ GUI toolkit
